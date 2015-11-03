@@ -1,37 +1,39 @@
-<?
+<?php
+
 require_once ('config.php');
 
 $content = file_get_contents('php://input');
 $json = json_decode($content, true);
-$file = fopen("log.txt", "a"); // Name for you Log File
+$file = fopen(LOGFILE, "a"); // Name for you Log File
 $time = time();
 
-fputs($file, date("d-m-Y (H:i:s)" . EOL,$time));
+fputs($file, date("d-m-Y (H:i:s)",$time . "\n"));
 
 if (!isset($_GET['token']) || $_GET['token'] !== TOKEN) {
 	header('HTTP/1.0 403 Forbidden');
-	fputs($file, "Access Denied" . EOL);
+	fputs($file, "Access Denied" . "\n");
 	exit;
 }else{
-	if($json['ref'] == "branch-name"){ // Example of "branch name": refs/heads/Dev or refs/heads/master
+	if($json['ref'] == BRANCH){
 		fputs($file, $content . EOL);
 		if (!file_exists(DIR.'.git') || !is_dir(DIR)) {
 		        try{
 	        	        chdir(DIR);
-	                	shell_exec('/usr/bin/git pull');
-	                	fputs($file, "*** AUTO PULL SUCCESFUL ***" . PHP_EOL);
+	                	shell_exec(GIT . ' pull');
+	                	fputs($file, "*** AUTO PULL SUCCESFUL ***" . "\n");
 	        	}catch (Exception $e) {
-	                	fwrite($file, $e . PHP_EOL);
+	                	fputs($file, $e . "\n");
 	        	}
 		}
 		else {
-	        	fputs($file, "DIR Not Found" . PHP_EOL);
+	        	fputs($file, "DIR Not Found" . "\n");
 		}
 	}
 	else{
-		fputs($file, "Push in: " . $json['ref'] . EOL);
+		fputs($file, "Push in: " . $json['ref'] . "\n");
 	}
 }
 
+fputs($file, "\n\n" . PHP_EOL);
 fclose($file);
 ?>
