@@ -16,7 +16,7 @@ if (!isset($_GET['token']) || $_GET['token'] !== TOKEN) {
 }else{
 	if($json['ref'] == BRANCH){
 		fputs($file, $content . EOL);
-		if (!file_exists(DIR.'.git') || !is_dir(DIR)) {
+		if (file_exists(DIR.'.git') && is_dir(DIR)) {
 		        try{
 	        	        chdir(DIR);
 	                	shell_exec(GIT . ' pull');
