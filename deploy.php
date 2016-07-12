@@ -15,7 +15,7 @@ if (!isset($_GET['token']) || $_GET['token'] !== TOKEN) {
 	exit;
 }else{
 	if($json['ref'] == BRANCH){
-		fputs($file, $content . EOL);
+		fputs($file, $content . PHP_EOL);
 		if (file_exists(DIR.'.git') && is_dir(DIR)) {
 		        try{
 	        	        chdir(DIR);
