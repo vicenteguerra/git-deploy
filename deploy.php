@@ -7,7 +7,8 @@ $json = json_decode($content, true);
 $file = fopen(LOGFILE, "a"); // Name for you Log File
 $time = time();
 
-fputs($file, date("d-m-Y (H:i:s)",$time . "\n"));
+date_default_timezone_set('UTC');
+fputs($file, date("d-m-Y (H:i:s)",$time) . "\n");
 
 if (!isset($_GET['token']) || $_GET['token'] !== TOKEN) {
 	header('HTTP/1.0 403 Forbidden');
