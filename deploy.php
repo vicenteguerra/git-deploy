@@ -21,6 +21,13 @@ if (!isset($_GET['token']) || $_GET['token'] !== TOKEN) {
 		        try{
 	        	        chdir(DIR);
 	                	shell_exec(GIT . ' pull');
+		        		if (!empty(AFTER_PULL)) {
+                            try{
+                                shell_exec(AFTER_PULL);
+                            }catch (Exception $e) {
+                                fputs($file, $e . "\n");
+                            }
+                        }
 	                	fputs($file, "*** AUTO PULL SUCCESFUL ***" . "\n");
 	        	}catch (Exception $e) {
 	                	fputs($file, $e . "\n");
