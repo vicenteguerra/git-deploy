@@ -5,4 +5,4 @@ define('DIR','/var/www/vhosts/HelloWordRepo/'); // It's important that the path 
 define('BRANCH','refs/heads/master'); // (Gitlab branch Route)
 define('LOGFILE', "log.txt"); // Log File Name
 define('GIT', '/usr/bin/git'); // Unix git command route
-
+define('AFTER_PULL', ''); // Command to execute after successfully pulling

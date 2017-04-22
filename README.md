@@ -5,7 +5,7 @@ You can select the branch for auto pull, this is util for Development and Produc
 
 ---
 
-##On your server
+## On your server
 
 You need to generate and config SSH Key
 
@@ -13,7 +13,7 @@ You need to generate and config SSH Key
 
 https://help.github.com/articles/generating-ssh-keys/
 
-### Gitlab 
+### Gitlab
 
 http://doc.gitlab.com/ce/ssh/README.html
 
@@ -24,16 +24,16 @@ In your public folder (public_html or something) you need put the __git-deploy__
 Change your configuration in __config.php__  File.
 
 ```PHP
-  define('TOKEN', 'your-secret-token'); 
+  define('TOKEN', 'your-secret-token');
   define('REMOTE_REPOSITORY', 'your-repository');
-  define('DIR','your-absolute-path-git'); 
+  define('DIR','your-absolute-path-git');
 ```
 
 ---
 
 ## On GitLab | GitHub | Bitbucket
 
-### Github 
+### Github
 
 In your repo:
 
@@ -57,7 +57,7 @@ Settings -> Web Hooks
 
 Url: http://yoursite.com/hook/deploy.php?token=your-secret-token
 
-Select Just the push event. 
+Select Just the push event.
 
 Add WebHook
 
