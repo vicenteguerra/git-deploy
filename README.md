@@ -59,6 +59,20 @@ Click "Add webhook" to save your settings, and the script should start working.
 
 ![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352520/e76ff672-28f1-11e7-8570-112f3eec8567.png)
 
+### Bitbucket
+
+In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
+
+- Title: git-deploy
+- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Active: &#9745;
+- SSL / TLS: &#9744; (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
+- Triggers: &#9745; Repository push
+
+Click "Save" to save your settings, and the script should start working.
+
+![Example screenshot showing Bitbucket webhook settings](https://cloud.githubusercontent.com/assets/1123997/25353037/97ec1052-28f3-11e7-88e4-b45c4ca68220.png)
+
 ---
 
 ## Support on Beerpay
