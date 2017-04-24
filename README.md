@@ -25,6 +25,7 @@ Open __git-deploy/config.php__, and update each variable.
   define('TOKEN', 'your-secret-token');
   define('REMOTE_REPOSITORY', 'your-repository');
   define('DIR','your-absolute-path-git');
+  define('AFTER_PULL','your-shell-commands');
 ```
 
 ---
