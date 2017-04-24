@@ -68,7 +68,7 @@ In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and
 - URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
 - Active: :ballot_box_with_check:
 - SSL / TLS: :white_large_square: Skip certificate verification (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
-- Triggers: :ballot_box_with_check: Repository push
+- Triggers: :radio_button: Repository push
 
 Click "Save" to save your settings, and the script should start working.
 
