@@ -2,7 +2,7 @@
 
 A PHP script to automatically pull from a repository to a web server (using a webhook on GitLab, GitHub or Bitbucket).
 
-You can configure which branch this script pulls from. This utility is useful for both development and production servers.
+You can configure which branch this script pulls from. This script is useful for both development and production servers.
 
 ---
 
