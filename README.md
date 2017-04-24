@@ -14,6 +14,7 @@ Generate an SSH key and add it to your account so that "git pull" can be run wit
 
 - [GitHub instructions](https://help.github.com/articles/generating-ssh-keys/)
 - [GitLab instructions](http://doc.gitlab.com/ce/ssh/README.html)
+- [Bitbucket instructions](https://confluence.atlassian.com/bitbucket/add-an-ssh-key-to-an-account-302811853.html)
 
 ### Configuration
 
