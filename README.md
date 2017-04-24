@@ -72,7 +72,7 @@ In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and
 
 Click "Save" to save your settings, and the script should start working.
 
-![Example screenshot showing Bitbucket webhook settings](https://cloud.githubusercontent.com/assets/1123997/25353037/97ec1052-28f3-11e7-88e4-b45c4ca68220.png)
+![Example screenshot showing Bitbucket webhook settings](https://cloud.githubusercontent.com/assets/1123997/25353602/7aee9cde-28f5-11e7-9baa-eb1e1330017e.png)
 
 ---
 
