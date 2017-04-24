@@ -10,7 +10,7 @@ You can configure which branch this script pulls from. This utility is useful fo
 
 ### SSH
 
-Generate an SSH key and add it to your account so that "git pull" can be run without a password.
+Generate an SSH key and add it to your account so that `git pull` can be run without a password.
 
 - [GitHub documentation](https://help.github.com/articles/generating-ssh-keys/)
 - [GitLab documentation](http://doc.gitlab.com/ce/ssh/README.html)
@@ -40,8 +40,8 @@ In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and
 - Payload URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
 - Content type: application/json
 - Secret: blank (this script uses a token at the end of the URL as the secret)
-- Which events would you like to trigger this webhook?: &#9745; Just the push event
-- Active: &#9745;
+- Which events would you like to trigger this webhook?: :radio_button: Just the push event
+- Active: :ballot_box_with_check:
 
 Click "Add webhook" to save your settings, and the script should start working.
 
@@ -53,8 +53,8 @@ In your repository, navigate to Settings &rarr; Integrations, and use the follow
 
 - URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
 - Secret Token: blank (this script uses a token at the end of the URL as the secret token)
-- Trigger: &#9745; Push events
-- Enable SSL verification: &#9745; (only if using SSL, see [GitLab's documentation](https://gitlab.com/help/user/project/integrations/webhooks#ssl-verification) for more details)
+- Trigger: :ballot_box_with_check: Push events
+- Enable SSL verification: :ballot_box_with_check: (only if using SSL, see [GitLab's documentation](https://gitlab.com/help/user/project/integrations/webhooks#ssl-verification) for more details)
 
 Click "Add webhook" to save your settings, and the script should start working.
 
@@ -66,9 +66,9 @@ In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and
 
 - Title: git-deploy
 - URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
-- Active: &#9745;
-- SSL / TLS: &#9744; (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
-- Triggers: &#9745; Repository push
+- Active: :ballot_box_with_check:
+- SSL / TLS: :white_large_square: Skip certificate verification (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
+- Triggers: :ballot_box_with_check: Repository push
 
 Click "Save" to save your settings, and the script should start working.
 
