@@ -40,9 +40,9 @@ Rename __git-deploy/config.sample.php__ to __git-deploy/config.php__, and update
 
 In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
-- Payload URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Payload URL: https://www.yoursite.com/git-deploy/deploy.php
 - Content type: application/json
-- Secret: blank (this script uses a token at the end of the URL as the secret)
+- Secret: The value of TOKEN in config.php
 - Which events would you like to trigger this webhook?: :radio_button: Just the push event
 - Active: :ballot_box_with_check:
 
@@ -54,8 +54,8 @@ Click "Add webhook" to save your settings, and the script should start working.
 
 In your repository, navigate to Settings &rarr; Integrations, and use the following settings:
 
-- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
-- Secret Token: blank (this script uses a token at the end of the URL as the secret token)
+- URL: https://www.yoursite.com/git-deploy/deploy.php
+- Secret Token: The value of TOKEN in config.php
 - Trigger: :ballot_box_with_check: Push events
 - Enable SSL verification: :ballot_box_with_check: (only if using SSL, see [GitLab's documentation](https://gitlab.com/help/user/project/integrations/webhooks#ssl-verification) for more details)
 
@@ -68,7 +68,7 @@ Click "Add webhook" to save your settings, and the script should start working.
 In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
 - Title: git-deploy
-- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- URL: https://www.yoursite.com/git-deploy/deploy.php?token=secret-token
 - Active: :ballot_box_with_check:
 - SSL / TLS: :white_large_square: Skip certificate verification (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
 - Triggers: :radio_button: Repository push
