@@ -1,80 +1,83 @@
 # git-deploy
-Php Script for Auto-Pull in server (Using WebHook from GitLab, GitHub or Bitbucket)
 
-You can select the branch for auto pull, this is util for Development and Production Server config.
+A PHP script to automatically pull from a repository to a web server (using a webhook on GitLab, GitHub or Bitbucket).
+
+You can configure which branch this script pulls from. This script is useful for both development and production servers.
 
 ---
 
 ## On your server
 
-You need to generate and config SSH Key
+### SSH
 
-### Github
+Generate an SSH key and add it to your account so that `git pull` can be run without a password.
 
-https://help.github.com/articles/generating-ssh-keys/
+- [GitHub documentation](https://help.github.com/articles/generating-ssh-keys/)
+- [GitLab documentation](http://doc.gitlab.com/ce/ssh/README.html)
+- [Bitbucket documentation](https://confluence.atlassian.com/bitbucket/add-an-ssh-key-to-an-account-302811853.html)
 
-### Gitlab
+### Configuration
 
-http://doc.gitlab.com/ce/ssh/README.html
+Copy the __git-deploy__ folder and its contents in to your public folder (typically public_html). Note that you can change the name of the folder if desired.
 
-When you have done ssh config, you can do "git pull" without put your password
-
-In your public folder (public_html or something) you need put the __git-deploy__ folder (or __hook__ for example) with __deploy.php__ and __config.php__
-
-Change your configuration in __config.php__  File.
+Open __git-deploy/config.php__, and update each variable.
 
 ```PHP
   define('TOKEN', 'your-secret-token');
   define('REMOTE_REPOSITORY', 'your-repository');
-  define('DIR','your-absolute-path-git');
+  define('DIR','your-absolute-path-to-git');
+  define('AFTER_PULL','your-shell-commands');
 ```
 
 ---
 
-## On GitLab | GitHub | Bitbucket
+## On GitHub | GitLab | Bitbucket
 
-### Github
+### GitHub
 
-In your repo:
+In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
-Settings -> Webhooks and Services -> Add Webhooks
+- Payload URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Content type: application/json
+- Secret: blank (this script uses a token at the end of the URL as the secret)
+- Which events would you like to trigger this webhook?: :radio_button: Just the push event
+- Active: :ballot_box_with_check:
 
-Payload Url: http://yoursite.com/hook/deploy.php?token=your-secret-token
+Click "Add webhook" to save your settings, and the script should start working.
 
-Select Just the push event.
+![Example screenshot showing GitHub webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352059/4e38f734-28f0-11e7-8f2c-e7ca5ef153ea.png)
 
-Mark "Active"
+### GitLab
 
-Add WebHook
+In your repository, navigate to Settings &rarr; Integrations, and use the following settings:
 
-![Alt text](https://lh3.googleusercontent.com/3JdfqcpD_Z26mxYHZSqxFXpGbjJI9gZ5R6ukFkKaI18VJD5OUcig9ejibIN2Z5PCIlx0Uss7Q4Tqz9eeovU52TEW7r0kCxTUvfumTFcVcQJ6qRXDN_2VGiE28s2iNTB_5BfjHUGvuJPw-4HXmNpPuklRTZCJfIZW9_a0MGA3F-plxUyWr14fslb1T585sakdoy2um9noDCCjoq0-IGrWtu5OjMfeFoy2rZd3ukHcyZUFZpW2E5I6in5sCXE8TlwNZn1P5zrpdKkUr-3oUcmX5WEr-sYISP8-vdh7fCu5BGNVZ5OKyvxQRbOq1q-1RVGZr8AccTU2rP8FA3vIfXe1_arIC0hzjeC1lzeQWshXjcwlP-WvMu3E7kpnezF1J1H4XxCWpJTbvPn7zAMIdL_k_WttMqyg3h05gEOPiDIsMorL2fddErSGfT50YlSx4YmWbxI5Hula-bTUviwGNP4wGAWHtiEcL2YtaZ6GLK6YrS9n5kV98or1P_P4p2aCmdBivY52oHGMJsubCrHI2qPC44iHf_i24KLiONVmD6orXkY=w996-h630-no "Optional title")
+- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Secret Token: blank (this script uses a token at the end of the URL as the secret token)
+- Trigger: :ballot_box_with_check: Push events
+- Enable SSL verification: :ballot_box_with_check: (only if using SSL, see [GitLab's documentation](https://gitlab.com/help/user/project/integrations/webhooks#ssl-verification) for more details)
 
-### Gitlab
+Click "Add webhook" to save your settings, and the script should start working.
 
-In your project:
+![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352520/e76ff672-28f1-11e7-8570-112f3eec8567.png)
 
-Settings -> Web Hooks  
+### Bitbucket
 
-Url: http://yoursite.com/hook/deploy.php?token=your-secret-token
+In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
-Select Just the push event.
+- Title: git-deploy
+- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Active: :ballot_box_with_check:
+- SSL / TLS: :white_large_square: Skip certificate verification (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
+- Triggers: :radio_button: Repository push
 
-Add WebHook
+Click "Save" to save your settings, and the script should start working.
 
-![Alt text](https://lh3.googleusercontent.com/ChFTifUafMA7DocGldkkIgqVDPRvSKgjeFWNu4NbNSCmiZxkFmZHhRBUFwSV5WmkDfBxGjn5FVW9PVRPi2kzFn1MM3S0EWVPavNTKx1UwDdKL2kZiFQzsIyawhIqGHfwMWxMsdANZ8RP7bnGXu9SxN7cAIwWFYCx7b0RNTgVjrPZzFzwHU_Cwb0YXmfgiQgGHKypZDEiFgwqWjqPja1AtckGX9dzG894jC7ecQFxCOBeCzveYbL8RG9_xb2fj2fqJu79WzBVqKuyILU00qsoglWBWYvEJLYC3VDpKba-OsomnRTkGqcnNaErrM_NR_URvOcs4CLZkOgZK0Cztj3wEdY5h8kfAdSfCWlki9Y0RAU0Xh7UUAhRWsQESsHNpi5uES22GO-oWoHf_uQ_297g9CRpbMPv4quWpYezvX-SbqHJy-o8ywVilvmcvRD2eSexwM6CH2ERPGwhwcJLbNu5AGsSnjNoVFCQaaffyMMFVwczGE0KrmOTQgwFcJM8HazA0X8tvPLnOgUwej_cLRKnI7T9Wpal-2sBCfkJ16Teu9U=w1234-h611-no "Optional title")
+![Example screenshot showing Bitbucket webhook settings](https://cloud.githubusercontent.com/assets/1123997/25353602/7aee9cde-28f5-11e7-9baa-eb1e1330017e.png)
 
 ---
 
-See the Wiki for more information about config (Customizing)
-
-
-
-
-
-
-
-
 ## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
+
+Hey dude! Help me out by buying me a couple of :beers:!
 
 [![Beerpay](https://beerpay.io/vicenteguerra/git-deploy/badge.svg?style=beer-square)](https://beerpay.io/vicenteguerra/git-deploy)  [![Beerpay](https://beerpay.io/vicenteguerra/git-deploy/make-wish.svg?style=flat-square)](https://beerpay.io/vicenteguerra/git-deploy?focus=wish)
