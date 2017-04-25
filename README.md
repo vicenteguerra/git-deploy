@@ -20,7 +20,7 @@ Generate an SSH key and add it to your account so that `git pull` can be run wit
 
 Copy the __git-deploy__ folder and its contents in to your public folder (typically public_html). Note that you can change the name of the folder if desired.
 
-Open __git-deploy/config.php__, and update each variable.
+Rename __git-deploy/config.sample.php__ to __git-deploy/config.php__, and update each variable.
 
 ```PHP
   define('TOKEN', 'your-secret-token');
