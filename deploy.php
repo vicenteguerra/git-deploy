@@ -9,10 +9,28 @@ $time    = time();
 date_default_timezone_set("UTC");
 fputs($file, date("d-m-Y (H:i:s)", $time) . "\n");
 
-if (!isset($_GET["token"]) || $_GET["token"] !== TOKEN) {
-    header("HTTP/1.0 403 Forbidden");
-    fputs($file, "Access Denied" . "\n");
-    exit;
+if (!empty(TOKEN)) {
+    if (isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
+        list($algo, $hash) = explode("=", $_SERVER["HTTP_X_HUB_SIGNATURE"], 2) + array("", "");
+
+        if ($hash !== hash_hmac($algo, $content, TOKEN)) {
+            header("HTTP/1.0 403 Forbidden");
+            fputs($file, "Access Denied" . "\n");
+            exit;
+        }
+    } elseif (isset($_SERVER["HTTP_X_GITLAB_TOKEN"])) {
+        if ($_SERVER["HTTP_X_GITLAB_TOKEN"] !== sha1(TOKEN)) {
+            header("HTTP/1.0 403 Forbidden");
+            fputs($file, "Access Denied" . "\n");
+            exit;
+        }
+    } elseif (isset($_GET["token"])) {
+        if ($_GET["token"] !== TOKEN) {
+            header("HTTP/1.0 403 Forbidden");
+            fputs($file, "Access Denied" . "\n");
+            exit;
+        }
+    }
 } else {
     if ($json["ref"] == BRANCH) {
         fputs($file, $content . PHP_EOL);
