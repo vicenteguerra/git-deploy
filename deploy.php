@@ -6,6 +6,7 @@ $json    = json_decode($content, true);
 $file    = fopen(LOGFILE, "a");
 $time    = time();
 
+// log the time
 date_default_timezone_set("UTC");
 fputs($file, date("d-m-Y (H:i:s)", $time) . "\n");
 
@@ -42,11 +43,14 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
     if ($json["ref"] === BRANCH) {
         fputs($file, $content . PHP_EOL);
 
+        // ensure directory is a repository
         if (file_exists(DIR . ".git") && is_dir(DIR)) {
             try {
+                // pull
                 chdir(DIR);
                 shell_exec(GIT . " pull");
 
+                // execute AFTER_PULL if specified
                 if (!empty(AFTER_PULL)) {
                     try {
                         shell_exec(AFTER_PULL);
