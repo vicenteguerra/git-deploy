@@ -48,7 +48,7 @@ In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and
 
 Click "Add webhook" to save your settings, and the script should start working.
 
-![Example screenshot showing GitHub webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352059/4e38f734-28f0-11e7-8f2c-e7ca5ef153ea.png)
+![Example screenshot showing GitHub webhook settings](https://cloud.githubusercontent.com/assets/1123997/25409764/f05526d0-29d8-11e7-858d-f28de59bd300.png)
 
 ### GitLab
 
@@ -61,7 +61,7 @@ In your repository, navigate to Settings &rarr; Integrations, and use the follow
 
 Click "Add webhook" to save your settings, and the script should start working.
 
-![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352520/e76ff672-28f1-11e7-8570-112f3eec8567.png)
+![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25409763/f0540a16-29d8-11e7-95d1-5570c574fde0.png)
 
 ### Bitbucket
 
