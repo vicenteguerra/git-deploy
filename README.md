@@ -23,13 +23,13 @@ Copy the __git-deploy__ folder and its contents in to your public folder (typica
 Rename __git-deploy/config.sample.php__ to __git-deploy/config.php__, and update each variable to a value that suits your needs. An example of a live configuration is below.
 
 ```PHP
-    define("TOKEN", "secret-token");
-    define("REMOTE_REPOSITORY", "git@github.com:username/custom-project.git");
-    define("DIR", "/var/www/vhosts/repositories/custom-project");
-    define("BRANCH", "refs/heads/master");
-    define("LOGFILE", "deploy.log");
-    define("GIT", "/usr/bin/git");
-    define("AFTER_PULL", "/usr/bin/node ./node_modules/gulp/bin/gulp.js default");
+define("TOKEN", "secret-token");
+define("REMOTE_REPOSITORY", "git@github.com:username/custom-project.git");
+define("DIR", "/var/www/vhosts/repositories/custom-project");
+define("BRANCH", "refs/heads/master");
+define("LOGFILE", "deploy.log");
+define("GIT", "/usr/bin/git");
+define("AFTER_PULL", "/usr/bin/node ./node_modules/gulp/bin/gulp.js default");
 ```
 
 ---
