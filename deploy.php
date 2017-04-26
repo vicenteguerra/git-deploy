@@ -21,7 +21,7 @@ date_default_timezone_set("UTC");
 fputs($file, date("d-m-Y (H:i:s)", $time) . "\n");
 
 // function to forbid access
-function forbid($reason) {
+function forbid($file, $reason) {
     // explain why
     if ($reason) fputs($file, "=== ERROR: " . $reason . " ===\n");
     fputs($file, "*** ACCESS DENIED ***" . "\n\n\n");
@@ -34,16 +34,16 @@ function forbid($reason) {
 
 // Check for a GitHub signature
 if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_hmac($algo, $content, TOKEN)) {
-    forbid("X-Hub-Signature does not match TOKEN");
+    forbid($file, "X-Hub-Signature does not match TOKEN");
 // Check for a GitLab token
 } elseif (!empty(TOKEN) && isset($_SERVER["HTTP_X_GITLAB_TOKEN"]) && $token !== sha1(TOKEN)) {
-    forbid("X-GitLab-Token does not match TOKEN");
+    forbid($file, "X-GitLab-Token does not match TOKEN");
 // Check for a $_GET token
 } elseif (!empty(TOKEN) && isset($_GET["token"]) && $token !== TOKEN) {
-    forbid("\$_GET[\"token\"] does not match TOKEN");
+    forbid($file, "\$_GET[\"token\"] does not match TOKEN");
 // if none of the above match, but a token exists, exit
 } elseif (!empty(TOKEN) && !isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && !isset($_SERVER["HTTP_X_GITLAB_TOKEN"]) && !isset($_GET["token"])) {
-    forbid("No token detected");
+    forbid($file, "No token detected");
 } else {
     // check if pushed branch matches branch specified in config
     if ($json["ref"] === BRANCH) {
