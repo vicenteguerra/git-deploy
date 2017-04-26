@@ -79,8 +79,4 @@ Click "Save" to save your settings, and the script should start working.
 
 ---
 
-## Support on Beerpay
-
-Hey dude! Help me out by buying me a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/vicenteguerra/git-deploy/badge.svg?style=beer-square)](https://beerpay.io/vicenteguerra/git-deploy)  [![Beerpay](https://beerpay.io/vicenteguerra/git-deploy/make-wish.svg?style=flat-square)](https://beerpay.io/vicenteguerra/git-deploy?focus=wish)
+I appreciate the collaboration of @JacobDB
