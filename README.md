@@ -1,6 +1,6 @@
 # git-deploy
 
-A PHP script to automatically pull from a repository to a web server (using a webhook on GitLab, GitHub or Bitbucket).
+A PHP script to automatically pull from a repository to a web server (using a webhook on GitHub, GitLab, or Bitbucket).
 
 You can configure which branch this script pulls from. This script is useful for both development and production servers.
 
@@ -20,13 +20,16 @@ Generate an SSH key and add it to your account so that `git pull` can be run wit
 
 Copy the __git-deploy__ folder and its contents in to your public folder (typically public_html). Note that you can change the name of the folder if desired.
 
-Open __git-deploy/config.php__, and update each variable.
+Rename __git-deploy/config.sample.php__ to __git-deploy/config.php__, and update each variable to a value that suits your needs. An example of a live configuration is below.
 
 ```PHP
-  define('TOKEN', 'your-secret-token');
-  define('REMOTE_REPOSITORY', 'your-repository');
-  define('DIR','your-absolute-path-to-git');
-  define('AFTER_PULL','your-shell-commands');
+define("TOKEN", "secret-token");
+define("REMOTE_REPOSITORY", "git@github.com:username/custom-project.git");
+define("DIR", "/var/www/vhosts/repositories/custom-project");
+define("BRANCH", "refs/heads/master");
+define("LOGFILE", "deploy.log");
+define("GIT", "/usr/bin/git");
+define("AFTER_PULL", "/usr/bin/node ./node_modules/gulp/bin/gulp.js default");
 ```
 
 ---
@@ -37,35 +40,35 @@ Open __git-deploy/config.php__, and update each variable.
 
 In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
-- Payload URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- Payload URL: https://www.yoursite.com/git-deploy/deploy.php
 - Content type: application/json
-- Secret: blank (this script uses a token at the end of the URL as the secret)
+- Secret: The value of TOKEN in config.php
 - Which events would you like to trigger this webhook?: :radio_button: Just the push event
 - Active: :ballot_box_with_check:
 
 Click "Add webhook" to save your settings, and the script should start working.
 
-![Example screenshot showing GitHub webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352059/4e38f734-28f0-11e7-8f2c-e7ca5ef153ea.png)
+![Example screenshot showing GitHub webhook settings](https://cloud.githubusercontent.com/assets/1123997/25409764/f05526d0-29d8-11e7-858d-f28de59bd300.png)
 
 ### GitLab
 
 In your repository, navigate to Settings &rarr; Integrations, and use the following settings:
 
-- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
-- Secret Token: blank (this script uses a token at the end of the URL as the secret token)
+- URL: https://www.yoursite.com/git-deploy/deploy.php
+- Secret Token: The value of TOKEN in config.php
 - Trigger: :ballot_box_with_check: Push events
 - Enable SSL verification: :ballot_box_with_check: (only if using SSL, see [GitLab's documentation](https://gitlab.com/help/user/project/integrations/webhooks#ssl-verification) for more details)
 
 Click "Add webhook" to save your settings, and the script should start working.
 
-![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25352520/e76ff672-28f1-11e7-8570-112f3eec8567.png)
+![Example screenshot showing GitLab webhook settings](https://cloud.githubusercontent.com/assets/1123997/25409763/f0540a16-29d8-11e7-95d1-5570c574fde0.png)
 
 ### Bitbucket
 
 In your repository, navigate to Settings &rarr; Webhooks &rarr; Add webhook, and use the following settings:
 
 - Title: git-deploy
-- URL: https://www.yoursite.com/git-deploy/deploy.php?token=your-secret-token
+- URL: https://www.yoursite.com/git-deploy/deploy.php?token=secret-token
 - Active: :ballot_box_with_check:
 - SSL / TLS: :white_large_square: Skip certificate verification (only if using SSL, see [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html#ManageWebhooks-skip_certificate) for more details)
 - Triggers: :radio_button: Repository push
