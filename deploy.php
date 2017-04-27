@@ -32,6 +32,17 @@ function forbid($file, $reason) {
     exit;
 }
 
+// function to return OK
+function ok() {
+    ob_start();
+    header("HTTP/1.1 200 OK");
+    header("Connection: close");
+    header("Content-Length: " . ob_get_length());
+    ob_end_flush();
+    ob_flush();
+    flush();
+}
+
 // Check for a GitHub signature
 if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_hmac($algo, $content, TOKEN)) {
     forbid($file, "X-Hub-Signature does not match TOKEN");
@@ -55,6 +66,9 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
                 // pull
                 chdir(DIR);
                 shell_exec(GIT . " pull");
+
+                // return OK to prevent timeouts on AFTER_PULL
+                ok();
 
                 // execute AFTER_PULL if specified
                 if (!empty(AFTER_PULL)) {
