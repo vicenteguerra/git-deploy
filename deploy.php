@@ -47,7 +47,7 @@ function ok() {
 if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_hmac($algo, $content, TOKEN)) {
     forbid($file, "X-Hub-Signature does not match TOKEN");
 // Check for a GitLab token
-} elseif (!empty(TOKEN) && isset($_SERVER["HTTP_X_GITLAB_TOKEN"]) && $token !== sha1(TOKEN)) {
+} elseif (!empty(TOKEN) && isset($_SERVER["HTTP_X_GITLAB_TOKEN"]) && $token !== TOKEN) {
     forbid($file, "X-GitLab-Token does not match TOKEN");
 // Check for a $_GET token
 } elseif (!empty(TOKEN) && isset($_GET["token"]) && $token !== TOKEN) {
