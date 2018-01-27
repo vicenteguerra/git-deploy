@@ -64,22 +64,25 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
         if (file_exists(DIR . ".git") && is_dir(DIR)) {
             try {
                 // pull
+                fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
                 chdir(DIR);
-                shell_exec(GIT . " pull");
-
+                $result = shell_exec(GIT . " pull 2>&1");
+                
+                fputs($file, $result . "\n");
+                
                 // return OK to prevent timeouts on AFTER_PULL
                 ok();
 
                 // execute AFTER_PULL if specified
                 if (!empty(AFTER_PULL)) {
                     try {
+                        fputs($file, "*** AFTER_PULL INITIATED ***" . "\n");
                         shell_exec(AFTER_PULL);
                     } catch (Exception $e) {
                         fputs($file, $e . "\n");
                     }
                 }
-
-                fputs($file, "*** AUTO PULL SUCCESFUL ***" . "\n");
+                fputs($file, "*** AUTO PULL COMPLETE ***" . "\n");
             } catch (Exception $e) {
                 fputs($file, $e . "\n");
             }
