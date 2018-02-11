@@ -31,6 +31,14 @@ define("LOGFILE", "deploy.log");
 define("GIT", "/usr/bin/git");
 define("AFTER_PULL", "/usr/bin/node ./node_modules/gulp/bin/gulp.js default");
 ```
+### Permissions
+
+When __deploy.php__ is called by the web-hook, the webserver user (`www`, `www-data`, `apache`, etc...) will attempt to run `git pull ...`. Since you probably cloned into the repository as yourself, and your user therefore owns it, the webserver user needs to be given write access. It is suggested this be accomplished by changing the repository group to the webserver user's and giving the group write permissions:
+
+1. Open a terminal to the directory containing the repository on the server.
+2. run `sudo chown -R yourusername:webserverusername custom-project-repo-dir/` to change the group of the repo.
+3. run `sudo chmod -R g+s custom-project-repo-dir/` to make the group assignment inherited for new files/dirs.
+4. run `sudo chmod -R 775 custom-project-repo-dir/` to set read & write for both owner and group.
 
 ---
 
