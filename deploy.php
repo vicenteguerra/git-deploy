@@ -67,9 +67,9 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
                 fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
                 chdir(DIR);
                 $result = shell_exec(GIT . " pull 2>&1");
-                
+
                 fputs($file, $result . "\n");
-                
+
                 // return OK to prevent timeouts on AFTER_PULL
                 ok();
 
@@ -77,7 +77,8 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
                 if (!empty(AFTER_PULL)) {
                     try {
                         fputs($file, "*** AFTER_PULL INITIATED ***" . "\n");
-                        shell_exec(AFTER_PULL);
+                        $result = shell_exec(AFTER_PULL);
+                        fputs($file, $result);
                     } catch (Exception $e) {
                         fputs($file, $e . "\n");
                     }
