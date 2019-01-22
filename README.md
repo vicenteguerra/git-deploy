@@ -20,7 +20,7 @@ Generate an SSH key and add it to your account so that `git pull` can be run wit
 
 Copy the __git-deploy__ folder and its contents in to your public folder (typically public_html). Note that you can change the name of the folder if desired.
 
-Rename __git-deploy/config.sample.php__ to __git-deploy/config.php__, and update each variable to a value that suits your needs. An example of a live configuration is below.
+Rename __git-deploy/deploy.sample.php__ to __git-deploy/deploy.php__, and update each variable to a value that suits your needs. Multiple copies of __git-deploy/deploy.sample.php__ can be made for multiple projects or versions (you just need to change the webhook url to match the new name). An example of a live configuration is below.
 
 ```PHP
 define("TOKEN", "secret-token");
