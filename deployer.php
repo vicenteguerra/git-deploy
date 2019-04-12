@@ -5,6 +5,7 @@ $json    = json_decode($content, true);
 $file    = fopen(LOGFILE, "a");
 $time    = time();
 $token   = false;
+$DIR     = preg_match("/\/$/", DIR) ? DIR : DIR . "/";
 
 // retrieve the token
 if (!$token && isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
@@ -60,10 +61,10 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
         fputs($file, $content . PHP_EOL);
 
         // ensure directory is a repository
-        if (file_exists(DIR . ".git") && is_dir(DIR)) {
+        if (file_exists($DIR . ".git") && is_dir($DIR)) {
             try {
                 // change directory to the repository
-                chdir(DIR);
+                chdir($DIR);
                 fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
 
                 // execute BEFORE_PULL if specified
