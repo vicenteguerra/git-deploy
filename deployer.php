@@ -62,11 +62,23 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
         // ensure directory is a repository
         if (file_exists(DIR . ".git") && is_dir(DIR)) {
             try {
-                // pull
-                fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
+                // change directory to the repository
                 chdir(DIR);
-                $result = shell_exec(GIT . " pull 2>&1");
+                fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
 
+                // execute BEFORE_PULL if specified
+                if (!empty(BEFORE_PULL)) {
+                    try {
+                        fputs($file, "*** BEFORE_PULL INITIATED ***" . "\n");
+                        $result = shell_exec(BEFORE_PULL);
+                        fputs($file, $result . "\n");
+                    } catch (Exception $e) {
+                        fputs($file, $e . "\n");
+                    }
+                }
+
+                // pull
+                $result = shell_exec(GIT . " pull 2>&1");
                 fputs($file, $result . "\n");
 
                 // return OK to prevent timeouts on AFTER_PULL

@@ -5,6 +5,7 @@ define("DIR", "/var/www/vhosts/repository/");                          // The pa
 define("BRANCH", "refs/heads/master");                                 // The branch route
 define("LOGFILE", "deploy.log");                                       // The name of the file you want to log to.
 define("GIT", "/usr/bin/git");                                         // The path to the git executable
+define("BEFORE_PULL", "");                                             // A command to execute before pulling
 define("AFTER_PULL", "");                                              // A command to execute after successfully pulling
 
 require_once("deployer.php");

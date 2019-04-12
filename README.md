@@ -29,6 +29,7 @@ define("DIR", "/var/www/vhosts/repositories/custom-project");
 define("BRANCH", "refs/heads/master");
 define("LOGFILE", "deploy.log");
 define("GIT", "/usr/bin/git");
+define("BEFORE_PULL", "/usr/bin/git reset --hard @{u}");
 define("AFTER_PULL", "/usr/bin/node ./node_modules/gulp/bin/gulp.js default");
 ```
 ### Permissions
