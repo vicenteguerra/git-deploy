@@ -30,13 +30,13 @@ if (!empty(MAX_EXECUTION_TIME)) {
 // function to forbid access
 function forbid($file, $reason) {
     // format the error
-    $error = "=== ERROR: " . $reason . " ===\n*** ACCESS DENIED ***";
+    $error = "=== ERROR: " . $reason . " ===\n*** ACCESS DENIED ***\n";
 
     // forbid
     http_response_code(403);
 
     // write the error to the log and the body
-    fputs($file, $error . "\n\n\n");
+    fputs($file, $error . "\n\n");
     echo $error;
 
     // close the log
@@ -141,30 +141,30 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
             fputs($file, "*** AUTO PULL COMPLETE ***" . "\n");
         } else {
             // prepare the generic error
-            $error = "=== ERROR: DIR `" . DIR . "` is not a repository ===";
+            $error = "=== ERROR: DIR `" . DIR . "` is not a repository ===\n";
 
             // try to detemrine the real error
             if (!file_exists(DIR)) {
-                $error = "=== ERROR: DIR `" . DIR . "` does not exist ===";
+                $error = "=== ERROR: DIR `" . DIR . "` does not exist ===\n";
             } elseif (!is_dir(DIR)) {
-                $error = "=== ERROR: DIR `" . DIR . "` is not a directory ===";
+                $error = "=== ERROR: DIR `" . DIR . "` is not a directory ===\n";
             }
 
             // bad request
             http_response_code(400);
 
             // write the error to the log and the body
-            fputs($file, $error . "\n");
+            fputs($file, $error);
             echo $error;
         }
     } else{
-        $error = "=== ERROR: Pushed branch `" . $json["ref"] . "` does not match BRANCH `" . BRANCH . "` ===";
+        $error = "=== ERROR: Pushed branch `" . $json["ref"] . "` does not match BRANCH `" . BRANCH . "` ===\n";
 
         // bad request
         http_response_code(400);
 
         // write the error to the log and the body
-        fputs($file, $error . "\n");
+        fputs($file, $error);
         echo $error;
     }
 }
