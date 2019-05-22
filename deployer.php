@@ -30,7 +30,7 @@ if (!empty(MAX_EXECUTION_TIME)) {
 // function to forbid access
 function forbid($file, $reason) {
     // format the error
-    $error = "=== ERROR: " . $reason . " ===\n *** ACCESS DENIED ***";
+    $error = "=== ERROR: " . $reason . " ===\n*** ACCESS DENIED ***";
 
     // forbid
     http_response_code(403);
