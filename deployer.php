@@ -1,5 +1,4 @@
 <?php
-
 $content = file_get_contents("php://input");
 $json    = json_decode($content, true);
 $file    = fopen(LOGFILE, "a");
@@ -16,31 +15,30 @@ if (!$token && isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
     $token = $_GET["token"];
 }
 
-// log the time
+// write the time to the log
 date_default_timezone_set("UTC");
 fputs($file, date("d-m-Y (H:i:s)", $time) . "\n");
 
+// specify that the response does not contain HTML
+header("Content-Type: text/plain");
+
 // function to forbid access
 function forbid($file, $reason) {
-    // explain why
-    if ($reason) fputs($file, "=== ERROR: " . $reason . " ===\n");
-    fputs($file, "*** ACCESS DENIED ***" . "\n\n\n");
-    fclose($file);
+    // format the error
+    $error = "=== ERROR: " . $reason . " ===\n *** ACCESS DENIED ***";
 
     // forbid
-    header("HTTP/1.0 403 Forbidden");
-    exit;
-}
+    http_response_code(403);
 
-// function to return OK
-function ok() {
-    ob_start();
-    header("HTTP/1.1 200 OK");
-    header("Connection: close");
-    header("Content-Length: " . ob_get_length());
-    ob_end_flush();
-    ob_flush();
-    flush();
+    // write the error to the log and the body
+    fputs($file, $error . "\n\n\n");
+    echo $error;
+
+    // close the log
+    fclose($file);
+
+    // stop executing
+    exit;
 }
 
 // Check for a GitHub signature
@@ -62,50 +60,110 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
 
         // ensure directory is a repository
         if (file_exists($DIR . ".git") && is_dir($DIR)) {
-            try {
-                // change directory to the repository
-                chdir($DIR);
-                fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
+            // change directory to the repository
+            chdir($DIR);
 
-                // execute BEFORE_PULL if specified
-                if (!empty(BEFORE_PULL)) {
-                    try {
-                        fputs($file, "*** BEFORE_PULL INITIATED ***" . "\n");
-                        $result = shell_exec(BEFORE_PULL);
-                        fputs($file, $result . "\n");
-                    } catch (Exception $e) {
-                        fputs($file, $e . "\n");
-                    }
+            // write to the log
+            fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
+
+            /**
+             * Attempt to execute BEFORE_PULL if specified
+             */
+            if (!empty(BEFORE_PULL)) {
+                // write to the log
+                fputs($file, "*** BEFORE_PULL INITIATED ***" . "\n");
+
+                // execute the command, returning the output and exit code
+                exec(BEFORE_PULL . " 2>&1", $output, $exit);
+
+                // reformat the output as a string
+                $output = (!empty($output) ? implode("\n", $output) : "[no output]") . "\n";
+
+                // if an error occurred, return 500 and log the error
+                if ($exit !== 0) {
+                    http_response_code(500);
+                    $output = "=== ERROR: BEFORE_PULL `" . BEFORE_PULL . "` failed ===\n" . $output;
                 }
 
-                // pull
-                $result = shell_exec(GIT . " pull 2>&1");
-                fputs($file, $result . "\n");
-
-                // return OK to prevent timeouts on AFTER_PULL
-                ok();
-
-                // execute AFTER_PULL if specified
-                if (!empty(AFTER_PULL)) {
-                    try {
-                        fputs($file, "*** AFTER_PULL INITIATED ***" . "\n");
-                        $result = shell_exec(AFTER_PULL);
-                        fputs($file, $result . "\n");
-                    } catch (Exception $e) {
-                        fputs($file, $e . "\n");
-                    }
-                }
-                fputs($file, "*** AUTO PULL COMPLETE ***" . "\n");
-            } catch (Exception $e) {
-                fputs($file, $e . "\n");
+                // write the output to the log and the body
+                fputs($file, $output);
+                echo $output;
             }
+
+            /**
+             * Attempt to pull, returing the output and exit code
+             */
+            exec(GIT . " pull 2>&1", $output, $exit);
+
+            // reformat the output as a string
+            $output = (!empty($output) ? implode("\n", $output) : "[no output]") . "\n";
+
+            // if an error occurred, return 500 and log the error
+            if ($exit !== 0) {
+                http_response_code(500);
+                $output = "=== ERROR: Pull failed using GIT `" . GIT . "` and DIR `" . DIR . "` ===\n" . $output;
+            }
+
+            // write the output to the log and the body
+            fputs($file, $output);
+            echo $output;
+
+            /**
+             * Attempt to execute BEFORE_PULL if specified
+             */
+            if (!empty(AFTER_PULL)) {
+                // write to the log
+                fputs($file, "*** AFTER_PULL INITIATED ***" . "\n");
+
+                // execute the command, returning the output and exit code
+                exec(AFTER_PULL . " 2>&1", $output, $exit);
+
+                // reformat the output as a string
+                $output = (!empty($output) ? implode("\n", $output) : "[no output]") . "\n";
+
+                // if an error occurred, return 500 and log the error
+                if ($exit !== 0) {
+                    http_response_code(500);
+                    $output = "=== ERROR: AFTER_PULL `" . AFTER_PULL . "` failed ===\n" . $output;
+                }
+
+                // write the output to the log and the body
+                fputs($file, $output);
+                echo $output;
+            }
+
+            // write to the log
+            fputs($file, "*** AUTO PULL COMPLETE ***" . "\n");
         } else {
-            fputs($file, "=== ERROR: DIR is not a repository ===" . "\n");
+            // prepare the generic error
+            $error = "=== ERROR: DIR `" . DIR . "` is not a repository ===";
+
+            // try to detemrine the real error
+            if (!file_exists(DIR)) {
+                $error = "=== ERROR: DIR `" . DIR . "` does not exist ===";
+            } elseif (!is_dir(DIR)) {
+                $error = "=== ERROR: DIR `" . DIR . "` is not a directory ===";
+            }
+
+            // bad request
+            http_response_code(400);
+
+            // write the error to the log and the body
+            fputs($file, $error . "\n");
+            echo $error;
         }
     } else{
-        fputs($file, "=== ERROR: Pushed branch does not match BRANCH ===\n");
+        $error = "=== ERROR: Pushed branch `" . $json["ref"] . "` does not match BRANCH `" . BRANCH . "` ===";
+
+        // bad request
+        http_response_code(400);
+
+        // write the error to the log and the body
+        fputs($file, $error . "\n");
+        echo $error;
     }
 }
 
+// close the log
 fputs($file, "\n\n" . PHP_EOL);
 fclose($file);
