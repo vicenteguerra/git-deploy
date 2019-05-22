@@ -22,6 +22,11 @@ fputs($file, date("d-m-Y (H:i:s)", $time) . "\n");
 // specify that the response does not contain HTML
 header("Content-Type: text/plain");
 
+// use user-defined max_execution_time
+if (!empty(MAX_EXECUTION_TIME)) {
+    ini_set("max_execution_time", MAX_EXECUTION_TIME);
+}
+
 // function to forbid access
 function forbid($file, $reason) {
     // format the error
