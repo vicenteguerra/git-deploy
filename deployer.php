@@ -4,6 +4,7 @@ $json    = json_decode($content, true);
 $file    = fopen(LOGFILE, "a");
 $time    = time();
 $token   = false;
+$sha     = false;
 $DIR     = preg_match("/\/$/", DIR) ? DIR : DIR . "/";
 
 // retrieve the token
@@ -13,6 +14,15 @@ if (!$token && isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
     $token = $_SERVER["HTTP_X_GITLAB_TOKEN"];
 } elseif (isset($_GET["token"])) {
     $token = $_GET["token"];
+}
+
+// retrieve the checkout_sha
+if (isset($json["checkout_sha"])) {
+    $sha = $json["checkout_sha"];
+} elseif (isset($_SERVER["checkout_sha"])) {
+    $sha = $_SERVER["checkout_sha"];
+} elseif (isset($_GET["sha"])) {
+    $sha = $_GET["sha"];
 }
 
 // write the time to the log
@@ -72,6 +82,29 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
             fputs($file, "*** AUTO PULL INITIATED ***" . "\n");
 
             /**
+             * Attempt to reset specific hash if specified
+             */
+            if (!empty($_GET["reset"]) && $_GET["reset"] === "true") {
+                // write to the log
+                fputs($file, "*** RESET TO HEAD INITIATED ***" . "\n");
+
+                exec(GIT . " reset --hard HEAD 2>&1", $output, $exit);
+
+                // reformat the output as a string
+                $output = (!empty($output) ? implode("\n", $output) : "[no output]") . "\n";
+
+                // if an error occurred, return 500 and log the error
+                if ($exit !== 0) {
+                    http_response_code(500);
+                    $output = "=== ERROR: Reset to head failed using GIT `" . GIT . "` ===\n" . $output;
+                }
+
+                // write the output to the log and the body
+                fputs($file, $output);
+                echo $output;
+            }
+
+            /**
              * Attempt to execute BEFORE_PULL if specified
              */
             if (!empty(BEFORE_PULL)) {
@@ -114,7 +147,30 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
             echo $output;
 
             /**
-             * Attempt to execute BEFORE_PULL if specified
+             * Attempt to checkout specific hash if specified
+             */
+            if (!empty($sha)) {
+                // write to the log
+                fputs($file, "*** RESET TO HASH INITIATED ***" . "\n");
+
+                exec(GIT . " reset --hard {$sha} 2>&1", $output, $exit);
+
+                // reformat the output as a string
+                $output = (!empty($output) ? implode("\n", $output) : "[no output]") . "\n";
+
+                // if an error occurred, return 500 and log the error
+                if ($exit !== 0) {
+                    http_response_code(500);
+                    $output = "=== ERROR: Reset failed using GIT `" . GIT . "` and \$sha `" . $sha . "` ===\n" . $output;
+                }
+
+                // write the output to the log and the body
+                fputs($file, $output);
+                echo $output;
+            }
+
+            /**
+             * Attempt to execute AFTER_PULL if specified
              */
             if (!empty(AFTER_PULL)) {
                 // write to the log

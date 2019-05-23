@@ -87,6 +87,16 @@ Click "Save" to save your settings, and the script should start working.
 
 ![Example screenshot showing Bitbucket webhook settings](https://cloud.githubusercontent.com/assets/1123997/25353602/7aee9cde-28f5-11e7-9baa-eb1e1330017e.png)
 
+## Integration with CI/CD
+
+If you'd prefer to integrate git-deploy with your CI scripts rather than using traditional Webhooks, you can trigger the hook via the following `wget` command.
+
+```sh
+wget --quiet --output-document=- --content-on-error --header="Content-Type: application/json" --post-data='{"ref":"refs/heads/master"}' 'https://www.example.com/git-deploy/deploy.php?token=secret-token'
+```
+
+Additionally, you can add the parameters `sha=COMMIT_HASH` and `reset=true` to the URL in order to instruct git-deploy to reset to a specific commit. **Note that this will overwrite any local changes you may have made.** This can be useful for integration with things like [GitLab's Environments feature](https://gitlab.com/help/ci/environments).
+
 ---
 
 I appreciate the collaboration of @JacobDB
