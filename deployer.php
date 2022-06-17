@@ -5,7 +5,7 @@ $file    = fopen(LOGFILE, "a");
 $time    = time();
 $token   = false;
 $sha     = false;
-$DIR     = preg_match("/\/$/", DIR) ? DIR : DIR . "/";
+$DIR     = preg_match("/\/$/", DIR) ? DIR : DIR;
 
 // retrieve the token
 if (!$token && isset($_SERVER["HTTP_X_HUB_SIGNATURE"])) {
@@ -69,12 +69,18 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
 } elseif (!empty(TOKEN) && !isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && !isset($_SERVER["HTTP_X_GITLAB_TOKEN"]) && !isset($_GET["token"])) {
     forbid($file, "No token detected");
 } else {
+    // if json is empty get the current branch name
+    if(empty($json)){
+        exec( GIT . "  branch --show-current 2>&1", $output, $exit);
+        $json["ref"]=  reset($output);
+    }
+
     // check if pushed branch matches branch specified in config
     if ($json["ref"] === BRANCH) {
         fputs($file, $content . PHP_EOL);
 
         // ensure directory is a repository
-        if (file_exists($DIR . ".git") && is_dir($DIR)) {
+        if (file_exists($DIR . "\.git") && is_dir($DIR)) {
             // change directory to the repository
             chdir($DIR);
 
@@ -139,7 +145,7 @@ if (!empty(TOKEN) && isset($_SERVER["HTTP_X_HUB_SIGNATURE"]) && $token !== hash_
             // if an error occurred, return 500 and log the error
             if ($exit !== 0) {
                 http_response_code(500);
-                $output = "=== ERROR: Pull failed using GIT `" . GIT . "` and DIR `" . DIR . "` ===\n" . $output;
+                $output = "=== ERROR: Pull failed using GIT `" . GIT . "` and DIR `" . $DIR . "` ===\n" . $output;
             }
 
             // write the output to the log and the body
