@@ -4,3 +4,6 @@ Deny from all
 <FilesMatch ^\/?deploy\.php$>
     Allow from all
 </FilesMatch>
+
+d
+d
