@@ -16,11 +16,11 @@ Generate an SSH key and add it to your account so that `git pull` can be run wit
 - [GitLab documentation](http://doc.gitlab.com/ce/ssh/README.html)
 - [Bitbucket documentation](https://confluence.atlassian.com/bitbucket/add-an-ssh-key-to-an-account-302811853.html)
 
-When __deploy.php__ is called by the web-hook, the webserver user (`www`, `www-data`, `apache`, etc...) will attempt to run `git pull ...`. You need to ensure that the SSH key you generate is for the webserver user.
+When __deploy.php__ is called by the web-hook, the webserver user (`www`, `www-data`, `apache`, etc...) will attempt to run `git pull ...`. You must ensure that the SSH key you generate is for the webserver user.
 
-First, find out the home directory of our apache user, for example by looking into /etc/passwd and looking for the `www-data` user or however the apache user of your distribution is called. The home directory is likely `/var/www`.
+First, find the home directory of our webserver user, for example, by looking into /etc/passwd and looking for the `www-data` user or whatever the webserver user of your distribution is called. The home directory is likely `/var/www`.
 
-Then, run (replacing `/var/www` with the home directory of the apache user on your setup):
+Then, run (replacing `/var/www` with the home directory of the webserver user on your setup):
 
 ```bash
 $ mkdir "$HOME/www-data.ssh"
@@ -33,7 +33,7 @@ $ cat << END > /var/www/.ssh/config
 > END
 $ chown -R www-data:www-data /var/www/.ssh
 ```
-Now your webserver user will use the ssh key in $HOME/www-data.ssh/id_rsa for all its ssh connections.
+Now, your webserver user will use the SSH key in $HOME/www-data.ssh/id_rsa for all its SSH connections.
 
 ### Configuration
 
